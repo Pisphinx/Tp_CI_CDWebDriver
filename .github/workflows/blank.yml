@@ -24,11 +24,7 @@ jobs:
         pip install --upgrade pip
         pip install pytest
     
-    - name: List files in rootdir
-      run: |
-        ls -la $GITHUB_WORKSPACE
-    
-    - name: Run test
+    - name: Run tests with pytest
       run: |
         source venv/bin/activate
         pytest
