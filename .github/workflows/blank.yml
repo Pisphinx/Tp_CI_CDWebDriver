@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: v2 # Specify v2 version which uses node16
       
     - name: Set up Python
       uses: actions/setup-python@v2
