@@ -43,3 +43,10 @@ jobs:
           pytest
 
       # Add more steps here for building, testing, and deploying your project
+      - name: Build and package
+        run: |
+          # Add commands to build and package your project here
+
+      - name: Deploy
+        run: |
+          # Add commands to deploy your project here
