@@ -1,9 +1,8 @@
-name: CI with Pytest
+name: CI with Pytest and Selenium
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -11,7 +10,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses : actions/checkout@v2
       
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -24,8 +23,9 @@ jobs:
         source venv/bin/activate
         pip install --upgrade pip
         pip install pytest
-    
+        pip install selenium
+        
     - name: Run tests with pytest
       run: |
         source venv/bin/activate
-        pytest
+        pytest path/to/your/test/file/test_discount_calculator.py
