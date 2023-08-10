@@ -1,6 +1,4 @@
 import pytest
-from selenium import webdriver
-
 def calculate_discount(price, discount_percentage):
     if price <= 0 or discount_percentage < 0 or discount_percentage > 100:
         raise ValueError("Invalid input values")
