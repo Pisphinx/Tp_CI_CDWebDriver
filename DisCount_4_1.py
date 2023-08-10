@@ -40,5 +40,3 @@ def test_discount_percentage_greater_than_100():
     with pytest.raises(ValueError, match="Invalid input values"):
         calculate_discount(price, discount_percentage)
 
-if __name__ == "__main__":
-    pytest.main(["-v", __file__,r"--html=C:\Users\IB\Desktop\PapeDocs\SELENIUM_WEBDRIVER\TPscripts\export\rapport.html"])
