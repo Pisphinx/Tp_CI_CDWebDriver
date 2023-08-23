@@ -1,36 +1,38 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
-- main
+- main  # Déclencher le pipeline lorsque la branche "main" est mise à jour
 
 pool:
-  vmImage: ubuntu-latest
-strategy:
-  matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
+  vmImage: 'ubuntu-latest'
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+jobs:
+- job: BuildAndTestJob
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'  # Version de Python que vous souhaitez utiliser
+      addToPath: true
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+  - script: |
+      python -m venv venv
+      source venv/bin/activate
+      pip install --upgrade pip
+      pip install pytest
+      pip install pytest-xdist
+      pip install pytest-html
+      pip install selenium
+    displayName: 'Installer les dépendances'
 
-- script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+  - script: |
+      BROWSER=chrome pytest -n auto
+    displayName: 'Exécuter les tests avec pytest et Selenium'
+
+  - script: |
+      pytest --html=report.html --self-contained-html
+      mv report.html $(Build.ArtifactStagingDirectory)/test_report.html
+    displayName: 'Générer et stocker les rapports de test'
+
+  - task: PublishPipelineArtifact@0
+    inputs:
+      artifactName: 'test-reports'
+      targetPath: $(Build.ArtifactStagingDirectory)/test_report.html
+    displayName: 'Télécharger les rapports de test'
