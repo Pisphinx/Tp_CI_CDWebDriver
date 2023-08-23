@@ -1,12 +1,9 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -14,7 +11,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses : actions/checkout@v2
+      uses: actions/checkout@v2
       
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -26,9 +23,10 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
+        pip install -r requirements.txt  # Assuming selenium is listed in requirements.txt
         pip install pytest
-    - name: Run test
+        
+    - name: Run tests
       run: |
         source venv/bin/activate
         pytest
-        
