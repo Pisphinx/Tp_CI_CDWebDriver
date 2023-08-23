@@ -1,9 +1,8 @@
-name: CI
+name: CI with Pytest and Selenium
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -18,15 +17,30 @@ jobs:
       with:
         python-version: 3.x
         
-    - name: Install dependencies
+    - name: Create and activate virtual environment
       run: |
         python -m venv venv
         source venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt  # Assuming selenium is listed in requirements.txt
-        pip install pytest
         
-    - name: Run tests
+    - name: Install dependencies
       run: |
-        source venv/bin/activate
-        pytest
+        pip install --upgrade pip
+        pip install pytest
+        pip install pytest-xdist
+        pip install pytest-html
+        pip install selenium
+    
+    - name: Run tests with pytest and Selenium
+      run: |
+        BROWSER=chrome pytest -n auto
+        
+    - name: Generate and store test reports
+      run: |
+        pytest --html=report.html --self-contained-html
+        mv report.html $GITHUB_WORKSPACE/test_report.html  # Change the name of the report file
+        
+    - name: Upload test reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: $GITHUB_WORKSPACE/test_report.html
